@@ -69,7 +69,7 @@ public class ParkingServiceTest {
         verify(ticketDAO, times(1)).getNbTicket("ABCDEF");
         verify(ticketDAO, times(1)).updateTicket(argThat(ticket -> {
             assertNotNull(ticket.getOutTime());
-            assertNotNull(ticket.getPrice());
+            assertTrue(ticket.getPrice() > 0.0);
             return true;
         }));
         verify(parkingSpotDAO, times(1)).updateParking(argThat(spot -> {
@@ -92,7 +92,6 @@ public class ParkingServiceTest {
         verify(ticketDAO, times(1)).getNbTicket("ABCDEF");
         verify(ticketDAO, times(1)).updateTicket(argThat(ticket -> {
             assertNotNull(ticket.getOutTime());
-            assertNotNull(ticket.getPrice());
             assertEquals(Fare.CAR_RATE_PER_HOUR * 0.95, ticket.getPrice());
             return true;
         }));
@@ -111,7 +110,7 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
         verify(ticketDAO, Mockito.times(1)).saveTicket(any(Ticket.class));
         assertEquals(1, parkingService.getNextParkingNumberIfAvailable().getId());
-        assertEquals(true, parkingService.getNextParkingNumberIfAvailable().isAvailable());
+        assertTrue(parkingService.getNextParkingNumberIfAvailable().isAvailable());
         assertEquals(ParkingType.CAR, parkingService.getNextParkingNumberIfAvailable().getParkingType());
     }
 
@@ -137,7 +136,7 @@ public class ParkingServiceTest {
         verify(parkingSpotDAO, Mockito.times(1)).getNextAvailableSlot(any(ParkingType.class));
         ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
         assertEquals(1, parkingSpot.getId());
-        assertEquals(true, parkingSpot.isAvailable());
+        assertTrue(parkingSpot.isAvailable());
     }
 
     @Test
